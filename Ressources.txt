@@ -3,7 +3,7 @@ Spaceship: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/double_ship.png
 Shot target:
 -red: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot1.png
 -blue: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot2.png 
-Missile: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot2.png
+Missile: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot3.png
 Explosion: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_spaceship.png
   
   Asteroid
