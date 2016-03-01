@@ -18,7 +18,32 @@ class Spaceship:
         pass
 
     def offset(self, c):
-        if c=='l': return self.pos.x#-width of the image
-        elif c=='r': return self.pos.x#+width of the image
-        elif c=='u': return self.pos.y#-height of the image
+        if c == 'l': return self.pos.x#-width of the image
+        elif c == 'r': return self.pos.x#+width of the image
+        elif c == 'u': return self.pos.y#-height of the image
         else: return self.pos.y#+height of the image
+
+
+class Missile:
+    def __init__(self, p, v):
+        self.pos = p
+        self.vel = v
+
+    def update(self):
+        self.pos.add(self.vel)
+
+    def draw(self, canvas):
+        pass
+
+    def hit(self, asteroid):
+        pass
+
+    def offset(self, c):
+        if c == 'l':
+            return self.pos.x  # -width of the image
+        elif c == 'r':
+            return self.pos.x  # +width of the image
+        elif c == 'u':
+            return self.pos.y  # -height of the image
+        else:
+            return self.pos.y  # +height of the image
