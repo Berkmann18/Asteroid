@@ -1,7 +1,9 @@
+import Vector
+
 class Rock:
     def __init__(self, p, v):
-        self.pos = p
-        self.vel = v
+        self.pos = Vector(p)
+        self.vel = Vector(v)
 
     def update(self):
         self.pos.add(self.vel)
