@@ -1,4 +1,4 @@
-class Spaceship:
+class Rock:
     def __init__(self, p, v):
         self.pos = p
         self.vel = v
