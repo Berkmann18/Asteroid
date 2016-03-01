@@ -1,0 +1,35 @@
+  Spaceship
+Spaceship: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/double_ship.png
+Shot target:
+-red: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot1.png
+-blue: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot2.png 
+Missile: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot2.png
+Explosion: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_spaceship.png
+  
+  Asteroid
+Explosion:
+-orange: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_orange.png
+-blue: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_blue1.png, http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_blue2.png
+-alpha: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_alpha.png
+Blue theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/asteroid_blue.png
+Brown theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/asteroid_brown.png
+Gray theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/asteroid_blend.png
+
+  Background
+Blue theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/nebula_blue.png
+Brown theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/nebula_brown.png
+
+  Debris
+Blue:
+-http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris1_blue.png
+-http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris2_blue.png
+-http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris3_blue.png
+-http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris4_blue.png
+
+Brown:
+-http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris1_brown.png
+-http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris2_brown.png
+-http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris3_brown.png
+-http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris4_brown.png
+
+Gray: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris_blend.png
