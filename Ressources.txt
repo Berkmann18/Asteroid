@@ -37,6 +37,6 @@ Gray: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris_blend.png
 
 CodeSkultor link (for testing):
 Vector.py: http://www.codeskulptor.org/#user41_fvaKp4ptt1_0.py
-Spaceship.py: http://www.codeskulptor.org/#user41_cr5aOmvn4W_4.py
-Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_0.py
-Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_0.py
+Spaceship.py: http://www.codeskulptor.org/#user41_cr5aOmvn4W_7.py
+Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_3.py
+Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_2.py
