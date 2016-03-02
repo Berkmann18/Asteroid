@@ -11,6 +11,7 @@ class Rock:
         self.pos = Vector(p)
         self.vel = Vector(v)
         self.size = 90
+        
     def update(self):
         self.pos.add(self.vel)
 
@@ -18,7 +19,7 @@ class Rock:
         canvas.draw_image(img, (self.size/2, self.size/2), (self.size, self.size), self.pos.getP(), (self.size, self.size))
 
     def offset(self, c):
-        if c=='l': return self.pos.x#-width of the image
-        elif c=='r': return self.pos.x#+width of the image
-        elif c=='u': return self.pos.y#-height of the image
-        else: return self.pos.y#+height of the image
+        if c=='l': return self.pos.x-self.size/2
+        elif c=='r': return self.pos.x+self.size/2
+        elif c=='u': return self.pos.y-self.size/2
+        else: return self.pos.y+-self.size/2
