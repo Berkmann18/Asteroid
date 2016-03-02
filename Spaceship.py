@@ -1,5 +1,5 @@
 import Vector
-try:
+try: #import SimpleGUI
     import simplegui
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
@@ -12,24 +12,24 @@ frameWidth = imgSize[0]/2 #2 columns
 frameHeight = imgSize[1] #there's only one row
 x = frameWidth/2
 y = frameHeight/2
-canvasSize = (600, 400)
 
 class Spaceship:
     def __init__(self, p, v):
-        self.pos = Vector(p)
-        self.vel = Vector(v)
+        self.pos = Vector(p) #position vector
+        self.vel = Vector(v) #velocity vector
         self.lives = 3
-        self.moveUp = False
-        self.moveDown = False
-        self.moveRight = False
-        self.moveLeft = False
+        self.rotCW = False
+        self.rotCCW = False
+        self.forward = False
+        self.gunLoaded = False
+        self.missiles = []
 
     def update(self):
         self.pos.add(self.vel)
 
     def draw(self, canvas):
         global frameWidth, frameHeight, x, y
-        j = 0 if self.moveUp or self.moveDown or self.moveLeft or self.moveRight else 1
+        j = 0 if self.rotCCW or self.rotCW or self.forward else 1 #decide which image is going to be shown depending on the spaceship's state
         frameWidth = imgSize[0]/2 #2 columns
         frameHeight = imgSize[1] #there's only one row
 
@@ -38,20 +38,24 @@ class Spaceship:
         canvas.draw_image(img, (x, y), (frameWidth, frameHeight), self.pos.getP(), (frameWidth, frameHeight))
 
 
-    def hit(self, asteroid):
-        pass
+    def hit(self, rock): #check whether or not the spaceship hit the rock
+        return not ((rock.pos.x>self.pos.x+imgSize[0]) or (rock.pos.x+rock.size<self.pos.x) or (rock.pos.y>self.pos.y+imgSize[1]) or (rock.pos.y+rock.size<self.pos.y))
 
-    def offset(self, c):
-        if c == 'l': return self.pos.x-frameWidth/2
-        elif c == 'r': return self.pos.x+frameWidth/2
-        elif c == 'u': return self.pos.y-frameHeight/2
-        else: return self.pos.y+frameHeight/2
+    def offset(self, c): #boundaries of the image
+        if c == 'l': return self.pos.x-frameWidth/2 #left side
+        elif c == 'r': return self.pos.x+frameWidth/2 #right side
+        elif c == 'u': return self.pos.y-frameHeight/2 #upper side
+        else: return self.pos.y+frameHeight/2 #down side
 
+    def shoot(self): #shoot a missile from the canon's position
+        v = self.vel.copy()
+        v.add(self.pos.mult(imgSize[1]))
+        self.missiles.append(Missile((self.offset('u'), self.offset('u')), v))
 
 class Missile:
     def __init__(self, p, v):
-        self.pos = p
-        self.vel = v
+        self.pos = Vector(p)
+        self.vel = Vector(v)
 
     def update(self):
         self.pos.add(self.vel)
@@ -59,7 +63,7 @@ class Missile:
     def draw(self, canvas):
         canvas.draw_image(missileImg, (10, 10), (20, 20), self.pos.getP(), (20, 20))
 
-    def hit(self, asteroid):
+    def hit(self, asteroid): #check whether or not the missile reached a rock
         return not ((asteroid.pos.x>self.pos.x+self.pos.w) or (asteroid.pos.x+asteroid.pos.w<self.pos.x) or (asteroid.pos.y>self.pos.y+self.pos.h) or (asteroid.pos.y+asteroid.pos.h<self.pos.y))
 
     def offset(self, c):
