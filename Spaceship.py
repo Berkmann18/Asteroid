@@ -1,76 +1,137 @@
-import Vector
+"""
+Spaceship.py
+Module implementing the spaceship with its missiles
+"""
+
 try: #import SimpleGUI
     import simplegui
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+import Vector
 
-img = simplegui.load_image("spaceship.png") #http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/double_ship.png
-missileImg = simplegui.load_image("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot3.png")
-imgSize = (180, 90)
-imgCentre = (90, 45)
-x = imgSize[0]/4
-y = imgSize[1]/2
+IMG = simplegui.load_image("spaceship.png")
+#http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/double_ship.png
+MISSILE_IMG = simplegui.load_image("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot3.png")
+IMG_SIZE = (180, 90)
+IMG_CENTRE = (90, 45)
+FRAME_X = IMG_SIZE[0]/4
+FRAME_Y = IMG_SIZE[1]/2
 
 class Spaceship:
-    def __init__(self, p, v):
-        self.pos = Vector(p) #position vector
-        self.vel = Vector(v) #velocity vector
+    """
+    Spaceship class
+    """
+    def __init__(self, pos, vel):
+        self.pos = Vector.Vector(pos) #position vector
+        self.vel = Vector.Vector(vel) #velocity vector
         self.lives = 3
-        self.rotCW = False
-        self.rotCCW = False
+        self.rot_cw = False
+        self.rot_ccw = False
         self.forward = False
-        self.gunLoaded = False
+        self.gun_loaded = False
         self.missiles = []
-        self.width = imgSize[0]/2 #2 columns
-        self.height = imgSize[1]
+        self.width = IMG_SIZE[0]/2 #2 columns
+        self.height = IMG_SIZE[1]
 
     def update(self):
+        """
+        Update the position of the spaceship
+        """
         self.pos.add(self.vel)
 
     def draw(self, canvas):
-        global frameWidth, frameHeight, x, y
-        j = 0 if self.rotCCW or self.rotCW or self.forward else 1 #decide which image is going to be shown depending on the spaceship's state
-        self.width = imgSize[0]/2
-        self.height = imgSize[1]
+        """
+        Draw the spaceship and its missiles
+        """
+        global FRAME_X, FRAME_Y
+        # Decide which image is going to be shown depending on the spaceship's state
+        j = 0 if self.rot_ccw or self.rot_cw or self.forward else 1
+        self.width = IMG_SIZE[0]/2
+        self.height = IMG_SIZE[1]
 
-        x = self.width*j+self.width/2
-        y = self.height/2
-        canvas.draw_image(img, (x, y), (self.width, self.height), self.pos.getP(), (self.width, self.height))
-        for m in self.missiles: m.draw(canvas)
+        FRAME_X = self.width*j+self.width/2
+        FRAME_Y = self.height/2
+        canvas.draw_image(IMG, (FRAME_X, FRAME_Y), (self.width, self.height),\
+        self.pos.get_pt(), (self.width, self.height))
+        for msl in self.missiles:
+            msl.draw(canvas)
 
-    def hit(self, rock): #check whether or not the spaceship hit the rock
-        return not ((rock.pos.x>self.pos.x+imgSize[0]) or (rock.pos.x+rock.size<self.pos.x) or (rock.pos.y>self.pos.y+imgSize[1]) or (rock.pos.y+rock.size<self.pos.y))
+    def hit(self, rock):
+        """
+        Check whether or not the spaceship hit the rock
+        """
+        return not ((rock.pos.x_coord > self.pos.x_coord+IMG_SIZE[0]) or\
+        (rock.pos.x_coord+rock.size < self.pos.x_coord) or\
+        (rock.pos.y_coord > self.pos.y_coord+IMG_SIZE[1]) or\
+        (rock.pos.y_coord+rock.size < self.pos.y_coord))
 
-    def offset(self, c): #boundaries of the image
-        if c == 'l': return self.pos.x-self.width/2 #left side
-        elif c == 'r': return self.pos.x+self.width/2 #right side
-        elif c == 'u': return self.pos.y-self.height/2 #upper side
-        else: return self.pos.y+self.height/2 #down side
+    def offset(self, char):
+        """
+        Boundaries of the image
+        """
+        if char == 'l':
+            return self.pos.x_coord-self.width/2 #left side
+        elif char == 'r':
+            return self.pos.x_coord+self.width/2 #right side
+        elif char == 'u':
+            return self.pos.y_coord-self.height/2 #upper side
+        else:
+            return self.pos.y_coord+self.height/2 #down side
 
-    def zone(self, c): #zone around the spaceship
-        return [self.pos.y-self.height, self.pos.x-self.width, self.pos.y+self.height, self.pos.x+self.width] #u, l, d, r
+    def zone(self):
+        """
+        Zone around the spaceship
+        """
+        return [self.pos.y_coord-self.height, self.pos.x_coord-self.width,\
+        self.pos.y_coord+self.height, self.pos.x_coord+self.width] #u, l, d, r
 
-    def shoot(self): #shoot a missile from the canon's position
-        v = self.vel.copy
-        v.add(self.pos.mult(imgSize[1]))
-        self.missiles.append(Missile((self.offset('u'), self.offset('u')), v))
+    def shoot(self):
+        """
+        shoot a missile from the canon's position
+        """
+        vct = self.vel.copy()
+        vct.add(self.pos.mult(IMG_SIZE[1]))
+        self.missiles.append(Missile((self.offset('u'), self.offset('u')), vct))
 
 class Missile:
-    def __init__(self, p, v):
-        self.pos = Vector(p)
-        self.vel = Vector(v)
+    """
+    Missile class
+    """
+    def __init__(self, pos, vel):
+        self.pos = Vector.Vector(pos)
+        self.vel = Vector.Vector(vel)
+        self.size = 90
 
     def update(self):
+        """
+        Update the position of the missile
+        """
         self.pos.add(self.vel)
 
     def draw(self, canvas):
-        canvas.draw_image(missileImg, (10, 10), (20, 20), self.pos.getP(), (20, 20))
+        """
+        Draw the missile
+        """
+        canvas.draw_image(MISSILE_IMG, (10, 10), (20, 20), self.pos.get_pt(), (20, 20))
 
-    def hit(self, asteroid): #check whether or not the missile reached a rock
-        return not ((asteroid.pos.x>self.pos.x+self.pos.w) or (asteroid.pos.x+asteroid.pos.w<self.pos.x) or (asteroid.pos.y>self.pos.y+self.pos.h) or (asteroid.pos.y+asteroid.pos.h<self.pos.y))
+    def hit(self, asteroid):
+        """
+        Check whether or not the missile reached a rock
+        """
+        return not ((asteroid.pos.x_coord > self.pos.x_coord+self.size) or\
+        (asteroid.pos.x_coord+asteroid.size < self.pos.x_coord) or\
+        (asteroid.pos.y_coord > self.pos.y_coord+self.size) or\
+        (asteroid.pos.y_coord+asteroid.size < self.pos.y_coord))
 
-    def offset(self, c):
-        if c == 'l': return self.pos.x-10
-        elif c == 'r': return self.pos.x+10
-        elif c == 'u': return self.pos.y-10
-        else: return self.pos.y+10
+    def offset(self, char):
+        """
+        Offsets of the missile
+        """
+        if char == 'l':
+            return self.pos.x_coord-10
+        elif char == 'r':
+            return self.pos.x_coord+10
+        elif char == 'u':
+            return self.pos.y_coord-10
+        else:
+            return self.pos.y_coord+10
