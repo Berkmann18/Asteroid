@@ -44,7 +44,6 @@ class Vector:
         return self.x_coord, self.y_coord
 
     # Returns a copy of the vector
-    @property
     def copy(self):
         """
         Copy the vector and return it
