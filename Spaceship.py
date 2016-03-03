@@ -4,14 +4,12 @@ try: #import SimpleGUI
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
-img = simplegui.load_image("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/double_ship.png")
+img = simplegui.load_image("spaceship.png") #http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/double_ship.png
 missileImg = simplegui.load_image("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot3.png")
 imgSize = (180, 90)
 imgCentre = (90, 45)
-frameWidth = imgSize[0]/2 #2 columns
-frameHeight = imgSize[1] #there's only one row
-x = frameWidth/2
-y = frameHeight/2
+x = imgSize[0]/4
+y = imgSize[1]/2
 
 class Spaceship:
     def __init__(self, p, v):
@@ -23,6 +21,8 @@ class Spaceship:
         self.forward = False
         self.gunLoaded = False
         self.missiles = []
+        self.width = imgSize[0]/2 #2 columns
+        self.height = imgSize[1]
 
     def update(self):
         self.pos.add(self.vel)
@@ -30,25 +30,28 @@ class Spaceship:
     def draw(self, canvas):
         global frameWidth, frameHeight, x, y
         j = 0 if self.rotCCW or self.rotCW or self.forward else 1 #decide which image is going to be shown depending on the spaceship's state
-        frameWidth = imgSize[0]/2 #2 columns
-        frameHeight = imgSize[1] #there's only one row
+        self.width = imgSize[0]/2
+        self.height = imgSize[1]
 
-        x = frameWidth*j+frameWidth/2
-        y = frameHeight/2
-        canvas.draw_image(img, (x, y), (frameWidth, frameHeight), self.pos.getP(), (frameWidth, frameHeight))
-
+        x = self.width*j+self.width/2
+        y = self.height/2
+        canvas.draw_image(img, (x, y), (self.width, self.height), self.pos.getP(), (self.width, self.height))
+        for m in self.missiles: m.draw(canvas)
 
     def hit(self, rock): #check whether or not the spaceship hit the rock
         return not ((rock.pos.x>self.pos.x+imgSize[0]) or (rock.pos.x+rock.size<self.pos.x) or (rock.pos.y>self.pos.y+imgSize[1]) or (rock.pos.y+rock.size<self.pos.y))
 
     def offset(self, c): #boundaries of the image
-        if c == 'l': return self.pos.x-frameWidth/2 #left side
-        elif c == 'r': return self.pos.x+frameWidth/2 #right side
-        elif c == 'u': return self.pos.y-frameHeight/2 #upper side
-        else: return self.pos.y+frameHeight/2 #down side
+        if c == 'l': return self.pos.x-self.width/2 #left side
+        elif c == 'r': return self.pos.x+self.width/2 #right side
+        elif c == 'u': return self.pos.y-self.height/2 #upper side
+        else: return self.pos.y+self.height/2 #down side
+
+    def zone(self, c): #zone around the spaceship
+        return [self.pos.y-self.height, self.pos.x-self.width, self.pos.y+self.height, self.pos.x+self.width] #u, l, d, r
 
     def shoot(self): #shoot a missile from the canon's position
-        v = self.vel.copy()
+        v = self.vel.copy
         v.add(self.pos.mult(imgSize[1]))
         self.missiles.append(Missile((self.offset('u'), self.offset('u')), v))
 
