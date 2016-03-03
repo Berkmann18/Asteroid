@@ -1,6 +1,9 @@
 #Main class
 
-import random, Vector, Spaceship, Rock
+import Rock
+import Spaceship
+import random
+
 try:
     import simplegui
 except ImportError:
@@ -21,19 +24,19 @@ class Interaction:
         for r in self.rocks:
             if self.spaceship.hit(r): self.spaceship.lives -= 1 #take a life off the spaceship
         if self.spaceship.lives <= 0: #start over
-            game.showWelcomeScreen = True
+            game.welcomeScreen["enabled"] = True
             self.rocks = [] #remove all rocks
 
         if self.spaceship.rotCW: #clockwise rotation of the spaceship
             pass
         if self.spaceship.rotCCW: #counter clockwise rotation of the spaceship
             pass
-        if self.forward: #go forward
+        if self.spaceship.forward: #go forward
             self.spaceship.update()
-        if self.gunLoaded: #shoot a missile
+        if self.spaceship.gunLoaded: #shoot a missile
             self.spaceship.shoot()
-            if self.missiles[len(self.missiles)-1].pos.x>canvasSize[0] or self.missiles[len(self.missiles)-1].pos.x<0 or self.missiles[len(self.missiles)-1].pos.y>canvasSize[1] or self.missiles[len(self.missiles)-1].pos.y<0:
-                self.missiles.pop() #remove the missile that went off-screen
+            if self.spaceship.missiles[len(self.spaceship.missiles)-1].pos.x > canvasSize[0] or self.spaceship.missiles[len(self.spaceship.missiles)-1].pos.x < 0 or self.spaceship.missiles[len(self.spaceship.missiles)-1].pos.y > canvasSize[1] or self.spaceship.missiles[len(self.spaceship.missiles)-1].pos.y < 0:
+                self.spaceship.missiles.pop() #remove the missile that went off-screen
 
 
 def rect(canvas, a, b, border, borderClr, bgClr): #draw a rectangle
@@ -43,30 +46,33 @@ def rect(canvas, a, b, border, borderClr, bgClr): #draw a rectangle
 
 def RandRocks(): #generate rocks at random positions
     rr = []
-    for i in random.randint(12):
+    for i in range(random.randint(12)):
         x = random.randrange(0, canvasSize[0])
         y = random.randrange(0, canvasSize[1])
-        rr.append(Rock((x, y), (0, 0)))
+        while Inter.spaceship.zone()[1] <= x <= Inter.spaceship.zone()[3]: x = random.randrange(0, canvasSize[0])
+        while Inter.spaceship.zone()[0] <= y <= Inter.spaceship.zone()[2]: y = random.randrange(0, canvasSize[1])
+        rr.append(Rock.Rock((x, y), (0, 0)))
     return rr
 
-Inter = Interaction(Spaceship((canvasSize[0]/2, canvasSize[1]/2), (0, 0)), RandRocks())
+Inter = Interaction(Spaceship.Spaceship((canvasSize[0]/2, canvasSize[1]/2), (0, 0)), RandRocks())
 
 class Game:
     def __init__(self):
-        self.showWelcomeScreen = True
+        self.welcomeScreen["enabled"] = True
+        self.welcomeScreen = dict(enabled=True, x=canvasSize[0]/4, y=canvasSize[1]/4, width=canvasSize[0]/2, height=canvasSize[1]/2)
         self.score = 0
 
     def draw(self, canvas):
-        if self.showWelcomeScreen: #display the welcome screen
+        if self.welcomeScreen["enabled"]: #display the welcome screen
             pass
-            self.showWelcomeScreen = False
+            self.welcomeScreen["enabled"] = False
         else:
             Inter.draw(canvas)
             canvas.draw_text("Score: "+str(self.score), (canvasSize[0]-450, 50), 25, "White", "sans-serif")
             canvas.draw_text("Lives: "+str(Inter.spaceship.lives), (50, 50), 25, "White", "sans-serif")
 
     def mouse(self, p): #mouse handler
-        if self.showWelcomeScreen:
+        if self.welcomeScreen["enabled"] and self.welcomeScreen["x"] <= p[0] <= self.welcomeScreen["x"]+self.welcomeScreen["width"] and self.welcomeScreen["y"] <= p[1] <= self.welcomeScreen["y"]+self.welcomeScreen["height"]:
             Inter.spaceship.lives = 3
             self.score = 0
 
