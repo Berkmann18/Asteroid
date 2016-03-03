@@ -1,14 +1,16 @@
 # The Vector class
-class Vector:
+import math
 
+class Vector:
     # Initialiser
-    def __init__(self, p=(0,0)):
+    def __init__(self, p=(0, 0)):
         self.x = p[0]
         self.y = p[1]
 
     # Returns a string representation of the vector
+    @property
     def __str__(self):
-        return "("+ str(self.x) + "," + str(self.y) + ")"
+        return "(" + str(self.x) + "," + str(self.y) + ")"
 
     # Tests the equality of this vector and another
     def __eq__(self, other):
@@ -23,6 +25,7 @@ class Vector:
         return (self.x, self.y)
 
     # Returns a copy of the vector
+    @property
     def copy(self):
         v = Vector()
         v.x = self.x
@@ -51,9 +54,9 @@ class Vector:
     def getNormalised(self):
         return (self.x/math.sqrt(math.pow(self.x, 2)+math.pow(self.y, 2)), self.y/math.sqrt(math.pow(self.x, 2)+math.pow(self.y, 2)))
 
+    @property
     def getNormal(self):
         return Vector(self.getNormalised())
-
 
     # Adds another vector to this vector
     def add(self, other):
@@ -93,7 +96,7 @@ class Vector:
 
     # Reflect this vector on a normal
     def reflect(self, normal):
-        n = normal.copy()
+        n = normal.copy
         n.mult(2*self.dot(normal))
         self.sub(n)
         return self
