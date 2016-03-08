@@ -13,6 +13,7 @@ import Rock
 import Spaceship
 
 CANVAS_SIZE = (600, 400)
+BG_IMG = simplegui.load_image("http://commondatastorage.googleapis.com/codeskulptor-assets/lathrop/nebula_brown.png")
 
 class Interaction:
     """
@@ -34,8 +35,14 @@ class Interaction:
         """
         Update everything needed for the interaction
         """
-        for rocks in self.rocks:
-            if self.spaceship.hit(rocks):
+        for rock in self.rocks:
+            for rck0 in self.rocks:
+                if not rock == rck0 and rock.hit(rck0):
+                    rock.collide(rck0)
+                    #r0.getChild()
+                    rock.update()
+                    rck0.update()
+            if self.spaceship.hit(rock):
                 self.spaceship.lives -= 1 #take a life off the spaceship
         if self.spaceship.lives <= 0: #start over
             GAME.welcome_screen["enabled"] = True
@@ -55,16 +62,7 @@ class Interaction:
             or self.spaceship.missiles[len(self.spaceship.missiles)-1].pos.y < 0:
                 self.spaceship.missiles.pop() #remove the missile that went off-screen
 
-
-def rect(canvas, pt_a, pt_b, pt_border, pt_border_clr, pt_bg_clr):
-    """
-    Drpt_aw pt_a rectpt_angle
-    """
-    canvas.draw_polygon([pt_a, (pt_b[0], pt_a[1]), pt_b, (pt_a[0], pt_b[1])],\
-	pt_border, pt_border_clr)
-    for i in range(pt_a[0]+1, pt_b[0]-1):
-        canvas.draw_line((i, pt_a[1]), (i, pt_b[1]), 2, pt_bg_clr)
-
+INTER = Interaction(Spaceship.Spaceship((CANVAS_SIZE[0]/2, CANVAS_SIZE[1]/2), (0, 0)), [])
 def randrocks():
     """
     Generate rocks at random positions
@@ -80,7 +78,7 @@ def randrocks():
         arr.append(Rock.Rock((x, y), (0, 0)))
     return arr
 
-INTER = Interaction(Spaceship.Spaceship((CANVAS_SIZE[0]/2, CANVAS_SIZE[1]/2), (0, 0)), randrocks())
+INTER.rocks = randrocks()
 
 class Game:
     """
