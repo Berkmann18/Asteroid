@@ -7,6 +7,7 @@ try: #import SimpleGUI
     import simplegui
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+import Util
 import Vector
 
 IMG = simplegui.load_image("spaceship.png")
@@ -32,6 +33,7 @@ class Spaceship:
         self.height = IMG_SIZE[1]
         self.frame_x = IMG_SIZE[0]/4
         self.frame_y = IMG_SIZE[1]/2
+        self.radius = IMG_SIZE[1]
 
     def update(self):
         """
@@ -44,7 +46,7 @@ class Spaceship:
         Draw the spaceship and its missiles
         """
         # Decide which image is going to be shown depending on the spaceship's state
-        j = 0 if self.rot_ccw or self.rot_cw or self.forward else 1
+        j = 1 if self.rot_ccw or self.rot_cw or self.forward else 0
         self.width = IMG_SIZE[0]/2
         self.height = IMG_SIZE[1]
 
@@ -59,10 +61,7 @@ class Spaceship:
         """
         Check whether or not the spaceship hit the rock
         """
-        return not ((rock.pos.x > self.pos.x+IMG_SIZE[0]) or\
-        (rock.pos.x+rock.size < self.pos.x) or\
-        (rock.pos.y > self.pos.y+IMG_SIZE[1]) or\
-        (rock.pos.y+rock.size < self.pos.y))
+        return self.get_ball().hit(rock.get_ball())
 
     def offset(self, char):
         """
@@ -89,8 +88,15 @@ class Spaceship:
         shoot a missile from the canon's position
         """
         vct = self.vel.copy()
-        vct.add(self.pos.mult(IMG_SIZE[1]))
-        self.missiles.append(Missile((self.offset('u'), self.offset('u')), vct))
+        vct.add(self.pos.copy().mult(IMG_SIZE[1]))
+        self.missiles.append(Missile((self.offset('d')+self.width+10, self.offset('u')+self.height/2), vct.get_pt()))
+
+    def get_ball(self):
+        """
+        Get the collision circle
+        """
+        return Util.Ball(self.pos, self.vel, .9*self.radius, 1, "rgba(255, 255, 255, 0)", "green")
+
 
 class Missile:
     """
@@ -118,9 +124,9 @@ class Missile:
         Check whether or not the missile reached a rock
         """
         return not ((asteroid.pos.x > self.pos.x+self.size) or\
-        (asteroid.pos.x+asteroid.size < self.pos.x) or\
+        (asteroid.pos.x+asteroid.radius < self.pos.x) or\
         (asteroid.pos.y > self.pos.y+self.size) or\
-        (asteroid.pos.y+asteroid.size < self.pos.y))
+        (asteroid.pos.y+asteroid.radius < self.pos.y))
 
     def offset(self, char):
         """
