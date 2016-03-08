@@ -5,8 +5,9 @@ Team members: Maximilian Berkmann, Zilvinas Pocius and Xavier Dersy
 
 Pylint evaluations:
 *  Vector.py: 9.69/10
-*  Rock.py: 9.57/10
-*  Spaceship.py: 9.86/10
-*  Asteroid.py: 9.32/10
+*  Rock.py: 7.73/10
+*  Spaceship.py: 9.73/10
+*  Asteroid.py: 9.34/10
+*  Util.py: 7.24/10
 
-Average grade: 9.61/10
+Average grade: 8.746/10
