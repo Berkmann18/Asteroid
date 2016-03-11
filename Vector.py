@@ -153,3 +153,9 @@ class Vector:
         vect_a = math.sqrt(self.x**2 + self.y**2)
         vect_b = math.sqrt(math.pow(other.x, 2) + math.pow(other.y, 2))
         return math.acos((self.x*other.x+self.y*other.y)/(vect_a*vect_b))
+
+    def draw(self, canvas, pt, clr):
+        """
+        Draw the vector from a particular point
+        """
+        canvas.draw_line(pt, (pt[0]+self.x, pt[1]+self.y), 1, clr)
