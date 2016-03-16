@@ -13,14 +13,16 @@ import Vector
 IMG = simplegui.load_image("spaceship.png")
 #^ or http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/double_ship.png
 MISSILE_IMG = simplegui.load_image("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot3.png")
+EXPLOSION_IMG = simplegui.load_image("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_spaceship.png")
 IMG_SIZE = (180, 90)
 IMG_CENTRE = (90, 45)
+CANVAS_SIZE = (700, 500)
 
 class Spaceship:
     """
     Spaceship class
     """
-    def __init__(self, pos, vel):
+    def __init__(self, pos=(0, 0), vel=(0, 0), acc=(0, 0)):
         self.pos = Vector.Vector(pos) #position vector
         self.vel = Vector.Vector(vel) #velocity vector
         self.lives = 3
@@ -31,31 +33,38 @@ class Spaceship:
         self.missiles = []
         self.width = IMG_SIZE[0]/2 #2 columns
         self.height = IMG_SIZE[1]
-        self.frame_x = IMG_SIZE[0]/4
-        self.frame_y = IMG_SIZE[1]/2
         self.radius = IMG_SIZE[1]
+        self.acc = Vector.Vector(acc) #acceleration vector
+        self.orientation = Vector.Vector((0, 1))
+        self.exploded = False
 
     def update(self):
         """
-        Update the position of the spaceship
+        Update the position of the spaceship as well as anything related to it
         """
         self.pos.add(self.vel)
+        self.vel.add(self.acc)
+        for msl in self.missiles:
+            msl.update()
+        if self.exploded:
+            self.explode()
 
     def draw(self, canvas):
         """
         Draw the spaceship and its missiles
         """
         # Decide which image is going to be shown depending on the spaceship's state
-        j = 1 if self.rot_ccw or self.rot_cw or self.forward else 0
-        self.width = IMG_SIZE[0]/2
-        self.height = IMG_SIZE[1]
-
-        self.frame_x = self.width*j+self.width/2
-        self.frame_y = self.height/2
-        canvas.draw_image(IMG, (self.frame_x, self.frame_y), (self.width, self.height),\
-        self.pos.get_pt(), (self.width, self.height))
-        for msl in self.missiles:
-            msl.draw(canvas)
+        if self.exploded:
+            canvas.draw_image(EXPLOSION_IMG, (100*j+self.width/2, 100*i+self.height/2), (self.width, self.height), (CANVAS_SIZE[0]/2, CANVAS_SIZE[1]/2), (self.width, self.height))
+        else:
+            j = 1 if self.rot_ccw or self.rot_cw or self.forward else 0 #decide which image is going to be shown depending on the spaceship's state
+            x = self.width*j+self.width/2
+            y = self.height/2
+            canvas.draw_image(IMG, (x, y), (self.width, self.height), self.pos.get_pt(), (self.width, self.height), self.orientation.x)
+            for msl in self.missiles:
+                msl.draw(canvas)
+        self.get_ball().draw(canvas)
+        self.vel.draw(canvas, self.pos.get_pt(), "blue")
 
     def hit(self, rock):
         """
@@ -97,6 +106,23 @@ class Spaceship:
         """
         return Util.Ball(self.pos, self.vel, .9*self.radius, 1, "rgba(255, 255, 255, 0)", "green")
 
+    def rot(self, theta): #in radians
+        """
+        Rotate the spaceship
+        """
+        self.orientation.rot(theta)
+
+    def explode(self):
+        """
+        Explode the spaceship
+        """
+        i = 0
+        j = 0
+        if self.exploded:
+            j += 1
+            if j >= 9:
+                j %= 9
+                i += 1
 
 class Missile:
     """
@@ -105,7 +131,7 @@ class Missile:
     def __init__(self, pos, vel):
         self.pos = Vector.Vector(pos)
         self.vel = Vector.Vector(vel)
-        self.size = 90
+        self.size = 20
 
     def update(self):
         """

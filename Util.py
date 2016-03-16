@@ -20,36 +20,36 @@ class Ball:
         self.pos = pos
         self.vel = vel
         self.radius = radius
-        self.border = 1
+        self.border = border
         self.color = color
-        self.borderColor = color2
+        self.border_color = color2
         self.lives = 10
 
     def update(self):
         """
-        Updates the ball's position
+        Update the ball's position
         """
         self.pos.add(self.vel)
 
-    def offsetL(self):
+    def offset_l(self):
         """
         Left offset
         """
         return self.pos.x - self.radius
 
-    def offsetR(self):
+    def offset_r(self):
         """
         Right offset
         """
         return self.pos.x + self.radius
 
-    def offsetU(self):
+    def offset_u(self):
         """
-        Top offset
+        Upper offset
         """
         return self.pos.y - self.radius
 
-    def offsetD(self):
+    def offset_d(self):
         """
         Bottom offset
         """
@@ -59,11 +59,12 @@ class Ball:
         """
         Draw the ball
         """
-        canvas.draw_circle(self.pos.getP(), self.radius, self.border, self.borderColor, self.color)
+        canvas.draw_circle(self.pos.get_pt(), self.radius, self.border,\
+                           self.border_color, self.color)
 
     def bounce(self, normal):
         """
-        Make the ball bounce
+        Bounce the ball
         """
         self.vel.reflect(normal)
 
@@ -72,3 +73,12 @@ class Ball:
         Ball/ball collision detection
         """
         return self.pos.copy().sub(ball.pos).length() <= self.radius+ball.radius
+
+def print_list(lst):
+    """
+    print a non-native typed list
+    """
+    str = ""
+    for i in lst:
+        str += i.__str__()+", "
+    print(str)

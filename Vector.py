@@ -85,7 +85,7 @@ class Vector:
         """
         Returns the normal of the vector
         """
-        return Vector(self.get_normalised)
+        return Vector(self.get_normalised())
 
     def add(self, other):
         """
@@ -159,3 +159,20 @@ class Vector:
         Draw the vector from a particular point
         """
         canvas.draw_line(pt, (pt[0]+self.x, pt[1]+self.y), 1, clr)
+
+    def rot(self, theta):
+        """
+        Rotates the vector by theta radians
+        """
+        self.x = self.x*math.cos(theta)-self.y*math.sin(theta)
+        self.y = self.x*math.sin(theta)+self.y*math.cos(theta)
+        return self
+
+    def __getitem__(self,index):
+        return (self.x if index==0 else self.y)
+
+    def __setitem__(self,index,value):
+        if index==0:
+            self.x = value
+        else:
+            self.y = value
