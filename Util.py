@@ -19,10 +19,10 @@ class ImgData:
         self.rows = r
         self.i = sI
         self.j = sJ
-        self.frameWidth = self.size[0]/self.cols
-        self.frameHeight = self.size[1]/self.rows
-        self.x = self.frameWidth*self.j+self.frameWidth/2
-        self.y = self.frameHeight*self.i+self.frameHeight/2
+        self.frame_width = self.size[0]/self.cols
+        self.frame_height = self.size[1]/self.rows
+        self.x = self.frame_width*self.j+self.frame_width/2
+        self.y = self.frame_height*self.i+self.frame_height/2
         self.timing = False
         self.complete = False
 
@@ -30,36 +30,36 @@ class ImgData:
         """
         Update the image's data
         """
-        self.frameWidth = self.size[0]/self.cols
-        self.frameHeight = self.size[1]/self.rows
-        self.x = self.frameWidth*self.j+self.frameWidth/2
-        self.y = self.frameHeight*self.i+self.frameHeight/2
+        self.frame_width = self.size[0]/self.cols
+        self.frame_height = self.size[1]/self.rows
+        self.x = self.frame_width*self.j+self.frame_width/2
+        self.y = self.frame_height*self.i+self.frame_height/2
         self.complete = True if (self.i >= self.cols and self.j >= self.rows) else False
 
     def draw(self, canvas, pos=(0, 0), rot=0):
         """
         Draw the image
         """
-        canvas.draw_image(self.src, (self.x, self.y), (self.frameWidth, self.frameHeight), pos, (self.frameWidth, self.frameHeight), rot)
+        canvas.draw_image(self.src, (self.x, self.y), (self.frame_width, self.frame_height), pos, (self.frame_width, self.frame_height), rot)
 
-    def ip(self):
+    def i_plus(self):
         """
         Increment the frame index i
         """
         self.i += 1
 
-    def im(self):
+    def i_minus(self):
         """
         Decrement the frame index i
         """
         self.i -= 1
 
-    def jp(self):
+    def j_plus(self):
         """
         Increment the frame index j
         """
         self.j += 1
-    def jm(self):
+    def j_minus(self):
         """
         Decrement the frame index j
         """
@@ -69,13 +69,13 @@ class ImgData:
         """
         Animate the image
         """
-        if self.i>=self.rows and self.j>=self.cols and self.timing==False: #reset
+        if self.i >= self.rows and self.j >= self.cols and not self.timing: #reset
             self.i = 0
             self.j = 0
-        if self.i>=self.rows: self.timing = False #stop
+        if self.i >= self.rows: self.timing = False #stop
         if self.timing:
             self.j += 1
-            if self.j>=self.cols:
+            if self.j >= self.cols:
                 self.j %= self.cols
                 self.i += 1
         self.update()
@@ -84,31 +84,43 @@ class ImgData:
         """
         Reverse animation
         """
-        if self.i<=0 and self.j<=0 and self.timing==False: #reset
+        if self.i <= 0 and self.j <= 0 and not self.timing: #reset
             self.i = self.rows
             self.j = self.cols
-        if self.i<=0: self.timing = False #stop
+        if self.i <= 0: self.timing = False #stop
         if self.timing:
             self.j -= 1
-            if self.j<=0:
+            if self.j <= 0:
                 self.j %= self.cols
                 self.i -= 1
         self.update()
 
     def toggle(self):
+        """
+        Switch on/off the timing
+        """
         self.timing = False if self.timing else True
 
-    def run(self, canvas, pos=(0, 0)):
-        self.draw(canvas, pos)
+    def run(self, canvas, pos=(0, 0), theta=0):
+        """
+        Show the animation
+        """
+        self.draw(canvas, pos, theta)
         self.animate()
 
     def reset(self):
+        """
+        Reset everything needed
+        """
         self.i = 0
         self.j = 0
         self.timing = False
         self.update()
 
     def get_frame_index(self):
+        """
+        Get the frame index
+        """
         return (self.i, self.j)
 
 def rect(canvas, pt_a, pt_b, border=1, border_clr="Black", bg_clr="White"):
