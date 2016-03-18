@@ -19,111 +19,73 @@ time = 0
 
 class Rock:
     def __init__(self, p=(0, 0), v=(0, 0), a=(0, 0)):
-        """
-        Rock class
-        """
         self.pos = Vector.Vector(p)
         self.vel = Vector.Vector(v)
         self.radius = 45
         self.exploded = False
         self.acc = Vector.Vector(a)
-        self.frame_width = 10 #90/9
-        self.frame_height = 10
-        self.frame_index = [0, 0]
-
+        self.fullyExploded = False #Explosion completeness check
+        self.ang = 0
+        self.explosion_IMG = Util.ImgData("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_blue1.png", (3072, 128), 24, 1)
+        
     def update(self):
-        """
-        Updates the position of the rock
-        """
         self.pos.add(self.vel)
         self.vel.add(self.acc)
-        if self.exploded: #animate an explosion
-            if self.frame_index[0] < 9:
-                self.frame_index[1] += 1
-                if self.frame_index[1] >= 9:
-                    self.frame_index[1] %= 9
-                    self.frame_index[0] += 1
-            #print self.frame_index
-        else:
-            self.frame_index = [0, 0]
-    def draw(self, canvas):
-        """
-        Draw the rock
-        """
         if self.exploded:
-            self.update()
-            print(self.frame_index)
-            canvas.draw_image(EXPLOSION_IMG, (self.frame_width*self.frame_index[1]+self.frame_width/2,\
-				self.frame_height*self.frame_index[0]+self.frame_height/2),
-                              (self.frame_width, self.frame_height), self.pos.get_pt(),\
-                              (self.frame_width, self.frame_height))
+            self.explosion_IMG.timing = True
+            self.explosion_IMG.animate()
         else:
-            canvas.draw_image(IMG, (self.radius, self.radius), (self.radius*2, self.radius*2), self.pos.get_pt(),\
-                              (self.radius*2, self.radius*2))
-            self.vel.draw(canvas, self.pos.get_pt(), "Red")
-
-    def offset(self, char):
-        """
-        Offsets of the rock
-        """
-        if char == 'l':
-            return self.pos.x-self.radius
-        elif char == 'r':
-            return self.pos.x+self.radius
-        elif char == 'u':
-            return self.pos.y-self.radius
+            pass#self.explosion_IMG.reset()
+        self.explosion_IMG.update()
+        self.fullyExploded = (self.exploded and self.explosion_IMG.complete)
+        self.ang = (self.ang+.1)%44
+        #print(self.explosion_IMG.i, self.explosion_IMG.j)
+    def draw(self, canvas):
+        if self.exploded:
+            self.explosion_IMG.draw(canvas, self.pos.copy().get_pt())
         else:
-            return self.pos.y+self.radius
-
-    def get_ball(self):
-        """
-        Get the collision circle
-        """
+            canvas.draw_image(IMG, (self.radius, self.radius), (self.radius*2, self.radius*2), self.pos.copy().get_pt(), (self.radius*2, self.radius*2), self.ang)
+            self.vel.draw(canvas, self.pos.copy().get_pt(), "Red")
+        
+    def offset(self, c):
+        if c=='l': return self.pos.x-self.radius
+        elif c=='r': return self.pos.x+self.radius
+        elif c=='u': return self.pos.y-self.radius
+        else: return self.pos.y+self.radius
+    
+    def get_ball(self): #get the collision circle
         return Util.Ball(self.pos, self.vel, .8*self.radius, 1, "rgba(255, 255, 255, 0)", "red")
-
-    def draw_circ(self, canvas):
-        """
-        Draw the collision circle
-        """
+    
+    def drawCirc(self, canvas):
         self.get_ball().draw(canvas)
-
+    
     def collide(self, rock):
-        """
-        Collide with an other rock
-        """
-        vct_u = self.vel.copy()
-        vct_v = rock.vel.copy()
-        norm = self.pos.copy().sub(rock.pos).get_normal()
-        vct_z = norm.copy().mult(self.pos.copy().sub(rock.pos).dot(norm))
-
-        vct_u.add(vct_z)
-        vct_v.sub(vct_z)
-
-        self.vel = vct_u
-        rock.vel = vct_v
-
-    def hit(self, rck):
-        """
-        Rock/rock collision detection
-        """
-        return self.get_ball().hit(rck.get_ball())
-
-    def get_child(self):
-        """
-        Get the childs of that rock
-        """
+        u = self.vel.copy()
+        v = rock.vel.copy()
+        n = self.pos.copy()
+        n1 = n.sub(rock.pos)
+        n2 = n1.get_normal()
+        z = n.copy().mult(self.pos.copy().sub(rock.pos).dot(n))
+        
+        u.add(z)
+        v.sub(z)
+        
+        self.vel = u
+        rock.vel = v
+    
+    def hit(self, r):
+        return self.get_ball().hit(r.get_ball())
+    
+    def getChild(self):
         childs = [
             Rock(self.pos.get_pt(), (2, 2)), Rock(self.pos.get_pt(), (2, -2)),
             Rock(self.pos.get_pt(), (-2, 2)), Rock(self.pos.get_pt(), (-2, -2))
         ]
-        for child in childs:
-            child.radius = self.radius/2
-            child.update()
-
+        for c in childs:
+            c.radius = self.radius/2
+            c.update()
+    
     def __str__(self):
-        """
-        String representation
-        """
         return "Rock(pos="+str(self.pos)+", vel="+str(self.vel)+")"
 
 def rand_rocks():
@@ -134,7 +96,7 @@ def rand_rocks():
         y = random.randrange(0, CANVAS_SIZE[1])
         pos = (x, y)
         rck = Rock(pos)
-        rr.append(rck) #File 'user41_fvaKp4ptt1_6.py', Line 14: TypeError: '<invalid type>' does not support indexing
+        rr.append(rck)
     return rr
 
 rocks = rand_rocks()
@@ -146,17 +108,15 @@ def draw_rocks(canvas):
             if not rck == rck0 and rck.hit(rck0):
                 rck.collide(rck0)
                 rck0.get_child()
-                rck.update()
-                rck0.update()
+            rck.update()
+            rck0.update()
         rck.draw(canvas)
-        rck.draw_circ(canvas)
+        #rck.draw_circ(canvas)
 
-count = 0
 def keydown():
     """Keydown handler"""
-    global count
-    if count < len(rocks) or len(rocks) > 0:
-        rocks[count].exploded = True
-        rocks[count].update()
-        count += 1
-        #rocks.pop(0)
+    if len(rocks)>0:
+        rocks[0].exploded = True
+        rocks[0].update()
+        if rocks[0].fullyExploded:
+            rocks.pop(0)

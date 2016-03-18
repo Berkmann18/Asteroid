@@ -167,12 +167,3 @@ class Vector:
         self.x = self.x*math.cos(theta)-self.y*math.sin(theta)
         self.y = self.x*math.sin(theta)+self.y*math.cos(theta)
         return self
-
-    def __getitem__(self,index):
-        return (self.x if index==0 else self.y)
-
-    def __setitem__(self,index,value):
-        if index==0:
-            self.x = value
-        else:
-            self.y = value
