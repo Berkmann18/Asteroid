@@ -9,6 +9,7 @@ try:
 except ImportError:
     import SimpleGUICS2PyGAME.simpleguics2pygame as simplegui
 
+import Util
 import Rock
 import Spaceship
 
@@ -41,31 +42,30 @@ class Interaction:
         """
         Update everything needed for the interaction
         """
-        for r in self.rocks:
-            if r.fully_exploded:
-                rocks.pop(rocks.index(r))
+        for rck in self.rocks:
+            if rck.fully_exploded:
+                self.rocks.pop(self.rocks.index(r))
                 GAME.score += 1
-            for r0 in self.rocks:
-                r.update()
-                r0.update()
-                if not r==r0 and r.hit(r0):
-                    #print "" #anti-bug to avoid having rocks still colliding
-                    r.collide(r0)
-                    r0.get_child()
-            if self.spaceship.hit(r):
+            for rck0 in self.rocks:
+                rck.update()
+                rck0.update()
+                if not rck == rck0 and rck.hit(rck0):
+                    rck.collide(rck0)
+                    rck0.get_child()
+            if self.spaceship.hit(rck):
                 self.spaceship.lives -= 1 #take a life off the spaceship
-                r.exploded = True
+                rck.exploded = True
         if self.spaceship.lives <= 0: #start over
             GAME.welcome_screen["enabled"] = True
             self.rocks = [] #remove all rocks
 
-        if self.spaceship.rotCW: #clockwise rotation of the spaceship
+        if self.spaceship.rot_cw: #clockwise rotation of the spaceship
             self.spaceship.rot(0.17453) #10deg
-        if self.spaceship.rotCCW: #counter clockwise rotation of the spaceship
+        if self.spaceship.rot_ccw: #counter clockwise rotation of the spaceship
             self.spaceship.rot(-0.17453) #-10deg
         if self.spaceship.forward: #go forward
             self.spaceship.update()
-        if self.spaceship.gunLoaded: #shoot a missile
+        if self.spaceship.gun_loaded: #shoot a missile
             self.spaceship.shoot()
             if self.spaceship.missiles[len(self.spaceship.missiles)-1].pos.x > CANVAS_SIZE[0]\
             or self.spaceship.missiles[len(self.spaceship.missiles)-1].pos.x < 0\
@@ -107,7 +107,7 @@ class Game:
         }
         self.score = 0
         self.time = 0
-        self.timerRunning = False
+        self.timer_running = False
 
     def draw(self, canvas):
         """
@@ -134,8 +134,11 @@ class Game:
             INTER.spaceship.lives = 3
             self.score = 0
 
-    def toggleTimer(self):
-        self.running = False if self.running else True
+    def toggle_timer(self):
+        """
+        Toggle the timer on/off
+        """
+        self.timer_running = False if self.timer_running else True
 
 def keydown(key):
     """
@@ -143,29 +146,29 @@ def keydown(key):
     """
     if key == simplegui.KEY_MAP['left']:
         # Spaceship rotates at a constant angular velocity in a counter clockwise direction
-        INTER.spaceship.rotCCW = True
+        INTER.spaceship.rot_ccw = True
     if key == simplegui.KEY_MAP['right']:
         # Spaceship rotates at a constant angular velocity in a clockwise direction
-        INTER.spaceship.rotCW = True
+        INTER.spaceship.rot_cw = True
     if key == simplegui.KEY_MAP['up']:
         # Spaceship accelerates in its forward direction
         INTER.spaceship.forward = True
     if key == simplegui.KEY_MAP['space']:
         # Missile is spawned at the tip of the spaceship's gun
-        INTER.spaceship.gunLoaded = True
+        INTER.spaceship.gun_loaded = True
 
 def keyup(key):
     """
     key up handler
     """
     if key == simplegui.KEY_MAP['left']:
-        INTER.spaceship.rotCCW = False
+        INTER.spaceship.rot_ccw = False
     if key == simplegui.KEY_MAP['right']:
-        INTER.spaceship.rotCW = False
+        INTER.spaceship.rot_cw = False
     if key == simplegui.KEY_MAP['up']:
         INTER.spaceship.forward = False
     if key == simplegui.KEY_MAP['space']:
-        INTER.spaceship.gunLoaded = False
+        INTER.spaceship.gun_loaded = False
 
 GAME = Game()
 INTER.update()

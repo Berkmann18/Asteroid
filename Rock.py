@@ -15,6 +15,9 @@ IMG = simplegui.load_image("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/as
 CANVAS_SIZE = (700, 500)
 
 class Rock:
+    """
+    Rock class for the asteroids
+    """
     def __init__(self, p=(0, 0), v=(0, 0), a=(0, 0), rad=45):
         self.pos = Vector.Vector(p)
         self.vel = Vector.Vector(v)
@@ -24,13 +27,12 @@ class Rock:
         self.fully_exploded = False #Explosion completeness check
         self.ang = 0
         self.explosion_img = Util.ImgData("http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_blue1.png", (3072, 128), 24, 1)
-        self.explosion_img.size = (self.radius*2, self.radius*2)
 
     def update(self):
         """
         Update the rock
         """
-        if Util.Clock.transit(60):
+        if Util.CLOCK.transit(60):
             self.pos.add(self.vel)
             self.vel.add(self.acc)
             if self.exploded:
@@ -109,12 +111,18 @@ class Rock:
         for c in childs:
             c.radius = self.radius/2
             c.update()
-            rocks.append(c)
+            ROCKS.append(c)
 
     def __str__(self):
+        """
+        String representation of the rock
+        """
         return "Rock(pos="+str(self.pos)+", vel="+str(self.vel)+")"
 
     def draw_vel(self, canvas):
+        """
+        Draw the velocity
+        """
         self.vel.draw(canvas, self.pos.copy().get_pt(), "Red")
 
 def rand_rocks():
@@ -128,34 +136,19 @@ def rand_rocks():
         arr.append(Rock((x, y), (0, 0), (0, 0), random.randint(10, 45)))
     return arr
 
-rocks = rand_rocks()
+ROCKS = rand_rocks()
 
-def drawRocks(canvas):
-    for r in rocks:
-        for r0 in rocks:
-            if not r==r0 and r.hit(r0):
-                r.collide(r0)
-                #r0.get_child()
-            r0.update()
-            r.update()
-        r.draw(canvas)
-        r.draw_circ(canvas)
-        r.draw_vel(canvas)
-'''
-def kd(key):
-    if len(rocks)>0:
-        rocks[0].exploded = True
-        rocks[0].update()
-        rocks[0].explosion_img.update()
-        print "fe:", rocks[0].fully_exploded
-        print "cpl:", rocks[0].explosion_img.complete
-        print "done:", rocks[0].explosion_img.is_done()
-        if rocks[0].fully_exploded:
-            #rocks[0].update()
-            rocks.pop(0)
-            print "-1"
-
-frame = simplegui.create_frame("Rocks", 700, CANVAS_SIZE[1])
-frame.set_draw_handler(drawRocks)
-frame.set_keydown_handler(kd)
-frame.start()'''
+def draw_rocks(canvas):
+    """
+    Draw rocks
+    """
+    for rck in ROCKS:
+        for rck0 in ROCKS:
+            if not rck == rck0 and rck.hit(rck0):
+                rck.collide(rck0)
+                #rck0.get_child()
+            rck0.update()
+            rck.update()
+        rck.draw(canvas)
+        rck.draw_circ(canvas)
+        rck.draw_vel(canvas)

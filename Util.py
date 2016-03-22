@@ -8,9 +8,7 @@ try:
 except ImportError:
     import SimpleGUICS2PyGAME.simpleguics2pygame as simplegui
 
-import Vector
-
-class clock:
+class Clock:
     """
     Game loop clock
     """
@@ -19,14 +17,20 @@ class clock:
         self.rate = 0
 
     def tick(self):
+        """
+        Game loop ticks
+        """
         self.time += 1
 
-    def transit(self, frameRate):
+    def transit(self, frameRate=60):
+        """
+        Frame rate transition
+        """
         self.tick()
         self.fr = 60/frameRate
-        return self.time%self.fr==0
+        return self.time%self.fr == 0
 
-Clock = clock()
+CLOCK = Clock()
 
 class ImgData:
     """
@@ -63,7 +67,7 @@ class ImgData:
         """
         Draw the image
         """#image, center_source, width_height_source, center_dest, width_height_dest
-        if self.cols==1 and self.rows==1: #image
+        if self.cols == 1 and self.rows == 1: #image
             canvas.draw_image(self.src, (self.frame_width/2, self.frame_height/2), (self.frame_width, self.frame_height), pos, (self.frame_width, self.frame_height), rot)
         else: #sprite
             canvas.draw_image(self.src, (self.x, self.y), (self.frame_width, self.frame_height), pos, (self.frame_width, self.frame_height), rot)
@@ -156,7 +160,10 @@ class ImgData:
         return (self.i, self.j)
 
     def is_done(self):
-        return self.complete or (self.i>=self.cols and self.j>=0)
+        """
+        Check if the animation is finished
+        """
+        return self.complete or (self.i >= self.cols and self.j >= 0)
 
 def rect(canvas, pt_a, pt_b, border=1, border_clr="Black", bg_clr="White"):
     """
