@@ -1,3 +1,21 @@
+CodeSkultor link (for testing):
+Vector.py: http://www.codeskulptor.org/#user41_fvaKp4ptt1_8.py
+Spaceship.py: http://www.codeskulptor.org/#user41_cr5aOmvn4W_62.py
+Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_120.py
+Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_36.py
+Util.py: http://www.codeskulptor.org/#user41_JYsA4spFG4_25.py
+
+Ours:
+Spaceships: (made by Xavier)
+-http://s15.postimg.org/6x37o3uaf/sapceship_ras_le_bol_2.png
+-http://s9.postimg.org/8oj6nfmwr/spaceship_blue_6.png
+-http://s10.postimg.org/w5zauahc5/spaceshp_grey3.png
+
+Splash: http://s23.postimg.org/vvz9p8o0r/splash.png (made by Xavier and edited by Maximilian)
+Bonus item (boosts): (made by Xavier and edited by Maximilian)
+-Heart: http://s8.postimg.org/ikapnk96t/heart.png
+-Shield: http://s28.postimg.org/c0n4w9yjh/shield.png, http://s22.postimg.org/onhkozn81/shield1.png
+
   Spaceship
 Spaceship: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/double_ship.png
 Shot target:
@@ -5,7 +23,6 @@ Shot target:
 -blue: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot2.png 
 Missile: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot3.png
 Explosion: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_spaceship.png
-Xavier's design: http://s15.postimg.org/6x37o3uaf/sapceship_ras_le_bol_2.png
   
   Asteroid
 Explosion:
@@ -19,7 +36,6 @@ Gray theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/asteroid_blend.png
   Background
 Blue theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/nebula_blue.png
 Brown theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/nebula_brown.png
-Xavier's design: http://s23.postimg.org/vvz9p8o0r/splash.png
 
   Debris
 Blue:
@@ -35,10 +51,3 @@ Brown:
 -http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris4_brown.png
 
 Gray: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris_blend.png
-
-CodeSkultor link (for testing):
-Vector.py: http://www.codeskulptor.org/#user41_fvaKp4ptt1_8.py
-Spaceship.py: http://www.codeskulptor.org/#user41_cr5aOmvn4W_62.py
-Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_120.py
-Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_36.py
-Util.py: http://www.codeskulptor.org/#user41_JYsA4spFG4_25.py
