@@ -9,10 +9,6 @@ try:
 except ImportError:
     import SimpleGUICS2PyGAME.simpleguics2pygame as simplegui
 
-import Util
-import Rock
-import Spaceship
-
 CANVAS_SIZE = (700, 500)
 BG_IMG = Util.ImgData("http://commondatastorage.googleapis.com/codeskulptor-assets/lathrop/nebula_brown.png", (800, 600))
 
