@@ -1,7 +1,7 @@
 # Asteroid
 CS1830 group project (assignment 3): Asteroid
 
-Team members: Maximilian Berkmann (coder), Zilvinas Pocius (coder) and Xavier Dersy aka boblepecheur (designer)
+Team members (Clementine team): Maximilian Berkmann (coder), Zilvinas Pocius (coder) and Xavier Dersy aka boblepecheur (designer)
 
 Pylint evaluations:
 *  Vector.py: 8.17/10
