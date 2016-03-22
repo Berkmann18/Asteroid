@@ -5,9 +5,9 @@ Team members: Maximilian Berkmann (coder), Zilvinas Pocius (coder) and Xavier De
 
 Pylint evaluations:
 *  Vector.py: 8.17/10
-*  Rock.py: 7.33/10
+*  Rock.py: 7.56/10
 *  Spaceship.py: 8.06/10
 *  Asteroid.py: 9.34/10
-*  Util.py: 9.12/10
+*  Util.py: 8.95/10
 
 Average grade: 8.404/10
