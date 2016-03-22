@@ -8,6 +8,26 @@ try:
 except ImportError:
     import SimpleGUICS2PyGAME.simpleguics2pygame as simplegui
 
+import Vector
+
+class clock:
+    """
+    Game loop clock
+    """
+    def __init__(self):
+        self.time = 0
+        self.rate = 0
+
+    def tick(self):
+        self.time += 1
+
+    def transit(self, frameRate):
+        self.tick()
+        self.fr = 60/frameRate
+        return self.time%self.fr==0
+
+Clock = clock()
+
 class ImgData:
     """
     Data collection of an image
@@ -25,6 +45,8 @@ class ImgData:
         self.y = self.frame_height*self.i+self.frame_height/2
         self.timing = False
         self.complete = False
+        self.frate = 50
+        #self.size = (self.frame_width, self.frame_height) for some reason this line get both fields to 9
 
     def update(self):
         """
@@ -34,13 +56,17 @@ class ImgData:
         self.frame_height = self.size[1]/self.rows
         self.x = self.frame_width*self.j+self.frame_width/2
         self.y = self.frame_height*self.i+self.frame_height/2
-        self.complete = True if (self.i >= self.cols and self.j >= self.rows) else False
+        self.complete = True if self.is_done() else False
+        #self.size = (self.frame_width, self.frame_height)
 
     def draw(self, canvas, pos=(0, 0), rot=0):
         """
         Draw the image
-        """
-        canvas.draw_image(self.src, (self.x, self.y), (self.frame_width, self.frame_height), pos, (self.frame_width, self.frame_height), rot)
+        """#image, center_source, width_height_source, center_dest, width_height_dest
+        if self.cols==1 and self.rows==1: #image
+            canvas.draw_image(self.src, (self.frame_width/2, self.frame_height/2), (self.frame_width, self.frame_height), pos, (self.frame_width, self.frame_height), rot)
+        else: #sprite
+            canvas.draw_image(self.src, (self.x, self.y), (self.frame_width, self.frame_height), pos, (self.frame_width, self.frame_height), rot)
 
     def i_plus(self):
         """
@@ -69,31 +95,37 @@ class ImgData:
         """
         Animate the image
         """
-        if self.i >= self.rows and self.j >= self.cols and not self.timing: #reset
-            self.i = 0
-            self.j = 0
-        if self.i >= self.rows: self.timing = False #stop
-        if self.timing:
-            self.j += 1
-            if self.j >= self.cols:
-                self.j %= self.cols
-                self.i += 1
-        self.update()
+        if Clock.transit(self.frate):
+            if self.i >= self.rows and self.j >= self.cols and not self.timing: #reset
+                self.i = 0
+                self.j = 0
+            if self.i >= self.rows:
+                self.timing = False #stop
+                self.complete = True
+            if self.timing:
+                self.j += 1
+                if self.j >= self.cols:
+                    self.j %= self.cols
+                    self.i += 1
+            self.update()
 
     def unanimate(self):
         """
         Reverse animation
         """
-        if self.i <= 0 and self.j <= 0 and not self.timing: #reset
-            self.i = self.rows
-            self.j = self.cols
-        if self.i <= 0: self.timing = False #stop
-        if self.timing:
-            self.j -= 1
-            if self.j <= 0:
-                self.j %= self.cols
-                self.i -= 1
-        self.update()
+        if Clock.transit(self.frate):
+            if self.i <= 0 and self.j <= 0 and not self.timing: #reset
+                self.i = self.rows
+                self.j = self.cols
+            if self.i <= 0:
+                self.timing = False #stop
+                self.complete = True
+            if self.timing:
+                self.j -= 1
+                if self.j <= 0:
+                    self.j %= self.cols
+                    self.i -= 1
+            self.update()
 
     def toggle(self):
         """
@@ -122,6 +154,9 @@ class ImgData:
         Get the frame index
         """
         return (self.i, self.j)
+
+    def is_done(self):
+        return self.complete or (self.i>=self.cols and self.j>=0)
 
 def rect(canvas, pt_a, pt_b, border=1, border_clr="Black", bg_clr="White"):
     """

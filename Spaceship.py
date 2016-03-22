@@ -8,6 +8,7 @@ try: #import SimpleGUI
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 import Util
+import math
 import Vector
 
 IMG = simplegui.load_image("spaceship.png")
@@ -19,150 +20,183 @@ IMG_CENTRE = (90, 45)
 CANVAS_SIZE = (700, 500)
 
 class Spaceship:
-    """
-    Spaceship class
-    """
-    def __init__(self, pos=(0, 0), vel=(0, 0), acc=(0, 0)):
-        self.pos = Vector.Vector(pos) #position vector
-        self.vel = Vector.Vector(vel) #velocity vector
+    def __init__(self, p, v=(0, 0), a=(0, 0)):
+        self.pos = Vector.Vector(p) #position vector
+        self.vel = Vector.Vector(v) #velocity vector
         self.lives = 3
-        self.rot_cw = False
-        self.rot_ccw = False
+        self.rotCW = False
+        self.rotCCW = False
         self.forward = False
-        self.gun_loaded = False
+        self.gunLoaded = False
         self.missiles = []
         self.width = IMG_SIZE[0]/2 #2 columns
         self.height = IMG_SIZE[1]
-        self.radius = IMG_SIZE[1]
-        self.acc = Vector.Vector(acc) #acceleration vector
+        self.radius = IMG_CENTRE[1]
+        self.acc = Vector.Vector(a) #acceleration vector
         self.orientation = Vector.Vector((0, 1))
         self.exploded = False
 
     def update(self):
-        """
-        Update the position of the spaceship as well as anything related to it
-        """
         self.pos.add(self.vel)
+        self.pos.x %= CANVAS_SIZE[0]
+        self.pos.y %= CANVAS_SIZE[1]
         self.vel.add(self.acc)
-        for msl in self.missiles:
-            msl.update()
-        if self.exploded:
-            self.explode()
+        for m in self.missiles:
+            m.update()
+        if self.exploded: self.explode()
 
     def draw(self, canvas):
-        """
-        Draw the spaceship and its missiles
-        """
-        # Decide which image is going to be shown depending on the spaceship's state
         if self.exploded:
             canvas.draw_image(EXPLOSION_IMG, (100*j+self.width/2, 100*i+self.height/2), (self.width, self.height), (CANVAS_SIZE[0]/2, CANVAS_SIZE[1]/2), (self.width, self.height))
         else:
-            j = 1 if self.rot_ccw or self.rot_cw or self.forward else 0 #decide which image is going to be shown depending on the spaceship's state
+            j = 1 if self.rotCCW or self.rotCW or self.forward else 0 #decide which image is going to be shown depending on the spaceship's state
             x = self.width*j+self.width/2
             y = self.height/2
             canvas.draw_image(IMG, (x, y), (self.width, self.height), self.pos.get_pt(), (self.width, self.height), self.orientation.x)
-            for msl in self.missiles:
-                msl.draw(canvas)
-        self.get_ball().draw(canvas)
+            for m in self.missiles: m.draw(canvas)
         self.vel.draw(canvas, self.pos.get_pt(), "blue")
-
-    def hit(self, rock):
-        """
-        Check whether or not the spaceship hit the rock
-        """
+        
+    def hit(self, rock): #check whether or not the spaceship hit the rock
         return self.get_ball().hit(rock.get_ball())
 
-    def offset(self, char):
-        """
-        Boundaries of the image
-        """
-        if char == 'l':
-            return self.pos.x-self.width/2 #left side
-        elif char == 'r':
-            return self.pos.x+self.width/2 #right side
-        elif char == 'u':
-            return self.pos.y-self.height/2 #upper side
-        else:
-            return self.pos.y+self.height/2 #down side
+    def offset(self, c): #boundaries of the image
+        if c == 'l': return self.pos.x-self.width/2 #left side
+        elif c == 'r': return self.pos.x+self.width/2 #right side
+        elif c == 'u': return self.pos.y-self.height/2 #upper side
+        else: return self.pos.y+self.height/2 #down side
 
-    def zone(self):
+    def zone(self): #zone around the spaceship
+        #return [self.pos.y-self.height/2, self.pos.x-self.width/2, self.pos.y+self.height/2, self.pos.x+self.width/2]
+        return util.Ball(self.pos, self.vel, self.radius*1.1, 1, "rgba(255, 255, 255, 0)", "blue")
+        
+    def shoot(self): #shoot a missile from the canon's position
+        v = self.vel.copy()
+        v.add(self.pos.copy().mult(IMG_SIZE[1]))
+        """print v
+        print self.orientation"""
+        self.missiles.append(Missile((self.offset('d')+self.width+10, self.offset('u')+self.height/2), v.get_pt()))
+    
+    def draw_zone(self, canvas):
+        #util.rect(canvas, (self.zone()[1], self.zone()[0]), (self.zone()[3], self.zone()[2]), 1, "blue", "rgba(255, 255, 255, 0)")
+        self.zone().draw(canvas)
+        
+    def get_ball(self): #get the collision circle
+        return util.Ball(self.pos, self.vel, .9*self.radius, 1, "rgba(255, 255, 255, 0)", "green")
+    
+    def draw_circ(self, canvas):
         """
-        Zone around the spaceship
+        Draw the collision circle
         """
-        return [self.pos.y-self.height, self.pos.x-self.width,\
-        self.pos.y+self.height, self.pos.x+self.width] #u, l, d, r
-
-    def shoot(self):
+        self.get_ball().draw(canvas)
+    
+    def draw_vel(self, canvas):
         """
-        shoot a missile from the canon's position
+        Draw the velocity
         """
-        vct = self.vel.copy()
-        vct.add(self.pos.copy().mult(IMG_SIZE[1]))
-        self.missiles.append(Missile((self.offset('d')+self.width+10, self.offset('u')+self.height/2), vct.get_pt()))
-
-    def get_ball(self):
+        pt = self.pos.copy().get_pt()
+        #self.vel.draw(canvas, pt, "Red")
+        canvas.draw_line(pt, (pt[0]+self.orientation.copy().mult(100).x, pt[1]+self.orientation.copy().mult(100).y), 3, "Red")
+    def rot(self, theta):
         """
-        Get the collision circle
+        Rotates the spaceship (in radians)
         """
-        return Util.Ball(self.pos, self.vel, .9*self.radius, 1, "rgba(255, 255, 255, 0)", "green")
-
-    def rot(self, theta): #in radians
-        """
-        Rotate the spaceship
-        """
-        self.orientation.rot(theta)
-
+        self.orientation = Vector.Vector((self.orientation.x*math.cos(theta)-self.orientation.y*math.sin(theta), self.orientation.x*math.sin(theta)+self.orientation.y*math.cos(theta)))
+        self.orientation.x += self.orientation.x*math.cos(theta)-self.orientation.y*math.sin(theta)
+        self.orientation.y += self.orientation.x*math.sin(theta)+self.orientation.y*math.cos(theta)
+        
     def explode(self):
         """
-        Explode the spaceship
+        Explodes the spaceship
         """
         i = 0
         j = 0
-        if self.exploded:
+        if i>=rows: timing = False #stop
+        if timing:
             j += 1
-            if j >= 9:
+            if j>=9:
                 j %= 9
                 i += 1
-
+    
 class Missile:
-    """
-    Missile class
-    """
-    def __init__(self, pos, vel):
-        self.pos = Vector.Vector(pos)
-        self.vel = Vector.Vector(vel)
+    def __init__(self, p, v):
+        self.pos = Vector.Vector(p)
+        self.vel = Vector.Vector(v)
         self.size = 20
 
     def update(self):
-        """
-        Update the position of the missile
-        """
         self.pos.add(self.vel)
 
     def draw(self, canvas):
-        """
-        Draw the missile
-        """
-        canvas.draw_image(MISSILE_IMG, (10, 10), (20, 20), self.pos.get_pt(), (20, 20))
+        canvas.draw_image(MISSILE_IMG, (self.size/2, self.size/2), (self.size, self.size), self.pos.get_pt(), (self.size, self.size))
 
-    def hit(self, asteroid):
-        """
-        Check whether or not the missile reached a rock
-        """
-        return not ((asteroid.pos.x > self.pos.x+self.size) or\
-        (asteroid.pos.x+asteroid.radius < self.pos.x) or\
-        (asteroid.pos.y > self.pos.y+self.size) or\
-        (asteroid.pos.y+asteroid.radius < self.pos.y))
+    def hit(self, asteroid): #check whether or not the missile reached a rock
+        return self.get_ball().hit(asteroid.get_ball())
 
-    def offset(self, char):
-        """
-        Offsets of the missile
-        """
-        if char == 'l':
-            return self.pos.x-10
-        elif char == 'r':
-            return self.pos.x+10
-        elif char == 'u':
-            return self.pos.y-10
-        else:
-            return self.pos.y+10
+    def offset(self, c):
+        if c == 'l': return self.pos.x-10
+        elif c == 'r': return self.pos.x+10
+        elif c == 'u': return self.pos.y-10
+        else: return self.pos.y+10
+'''
+#Testing
+def keydown(key):
+    """
+    Key down handler
+    """
+    if key == simplegui.KEY_MAP['left']:
+        # Spaceship rotates at a constant angular velocity in a counter clockwise direction
+        sc.rotCCW = True
+    if key == simplegui.KEY_MAP['right']:
+        # Spaceship rotates at a constant angular velocity in a clockwise direction
+        sc.rotCW = True
+    if key == simplegui.KEY_MAP['up']:
+        # Spaceship accelerates in its forward direction
+        sc.forward = True
+    if key == simplegui.KEY_MAP['space']:
+        # Missile is spawned at the tip of the spaceship's gun
+        sc.gunLoaded = True
+
+def keyup(key):
+    """
+    key up handler
+    """
+    if key == simplegui.KEY_MAP['left']:
+        sc.rotCCW = False
+    if key == simplegui.KEY_MAP['right']:
+        sc.rotCW = False
+    if key == simplegui.KEY_MAP['up']:
+        sc.forward = False
+    if key == simplegui.KEY_MAP['space']:
+        sc.gunLoaded = False
+
+def update():
+    if sc.rotCW: #clockwise rotation of the spaceship
+        sc.rot(0.17453) #.17453=10deg or 0.5236 for 30
+    if sc.rotCCW: #counter clockwise rotation of the spaceship
+        sc.rot(-0.17453) #-10deg
+    if sc.forward: #go forward
+        sc.update()
+    if sc.gunLoaded: #shoot a missile
+        sc.shoot()
+        if sc.missiles[len(sc.missiles)-1].pos.x > CANVAS_SIZE[0]\
+        or sc.missiles[len(sc.missiles)-1].pos.x < 0\
+        or sc.missiles[len(sc.missiles)-1].pos.y > CANVAS_SIZE[1]\
+        or sc.missiles[len(sc.missiles)-1].pos.y < 0:
+            sc.missiles.pop() #remove the missile that went off-screen
+
+def draw(canvas):
+    update()
+    sc.draw(canvas)
+    sc.draw_circ(canvas)
+    sc.draw_zone(canvas)
+    sc.draw_vel(canvas)
+
+sc = Spaceship((CANVAS_SIZE[0]/2, CANVAS_SIZE[1]/2), (5, 0))
+update()
+frame = simplegui.create_frame("Spaceship", CANVAS_SIZE[0], CANVAS_SIZE[1])
+frame.set_draw_handler(draw)
+frame.set_keydown_handler(keydown)
+frame.set_keyup_handler(keyup)
+
+frame.start()
+'''
