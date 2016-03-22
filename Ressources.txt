@@ -5,6 +5,7 @@ Shot target:
 -blue: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot2.png 
 Missile: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/shot3.png
 Explosion: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/explosion_spaceship.png
+Xavier's design: http://s15.postimg.org/6x37o3uaf/sapceship_ras_le_bol_2.png
   
   Asteroid
 Explosion:
@@ -18,6 +19,7 @@ Gray theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/asteroid_blend.png
   Background
 Blue theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/nebula_blue.png
 Brown theme: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/nebula_brown.png
+Xavier's design: http://s23.postimg.org/vvz9p8o0r/splash.png
 
   Debris
 Blue:
@@ -34,10 +36,9 @@ Brown:
 
 Gray: http://www.cs.rhul.ac.uk/courses/CS1830/asteroids/debris_blend.png
 
-
 CodeSkultor link (for testing):
 Vector.py: http://www.codeskulptor.org/#user41_fvaKp4ptt1_8.py
-Spaceship.py: http://www.codeskulptor.org/#user41_cr5aOmvn4W_47.py
-Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_109.py
-Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_22.py
-Util.py: http://www.codeskulptor.org/#user41_JYsA4spFG4_14.py
+Spaceship.py: http://www.codeskulptor.org/#user41_cr5aOmvn4W_62.py
+Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_120.py
+Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_32.py
+Util.py: http://www.codeskulptor.org/#user41_JYsA4spFG4_24.py
