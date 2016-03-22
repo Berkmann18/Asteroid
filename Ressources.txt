@@ -7,6 +7,7 @@ Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_37.py
 
 Ours:
 Spaceships: (made by Xavier)
+-http://s10.postimg.org/yfn097lu1/spaceship_sw.png (edited by Maximilian)
 -http://s15.postimg.org/6x37o3uaf/sapceship_ras_le_bol_2.png
 -http://s9.postimg.org/8oj6nfmwr/spaceship_blue_6.png
 -http://s10.postimg.org/w5zauahc5/spaceshp_grey3.png
