@@ -1,9 +1,11 @@
 CodeSkultor link (for testing):
-Vector.py: http://www.codeskulptor.org/#user41_fvaKp4ptt1_8.py
-Util.py: http://www.codeskulptor.org/#user41_JYsA4spFG4_27.py
-Spaceship.py: http://www.codeskulptor.org/#user41_WToDBDUICg_0.py
-Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_121.py
-Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_37.py
+Vector.py: http://www.codeskulptor.org/#user41_fvaKp4ptt1_10.py
+Util.py: http://www.codeskulptor.org/#user41_JYsA4spFG4_29.py
+Spaceship.py: http://www.codeskulptor.org/#user41_WToDBDUICg_3.py
+  Zilvinas': http://www.codeskulptor.org/#user41_hYeTvD1UaF_4.py
+  Adapted from Zilvinas': http://www.codeskulptor.org/#user41_hYeTvD1UaF_6.py
+Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_122.py
+Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_41.py
 
 Ours:
 Spaceships: (made by Xavier)
