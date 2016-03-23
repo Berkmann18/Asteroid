@@ -2,8 +2,8 @@ CodeSkultor link (for testing):
 Vector.py: http://www.codeskulptor.org/#user41_fvaKp4ptt1_11.py
 Util.py: http://www.codeskulptor.org/#user41_JYsA4spFG4_32.py
 Spaceship.py: http://www.codeskulptor.org/#user41_WToDBDUICg_3.py
-  Zilvinas': http://www.codeskulptor.org/#user41_hYeTvD1UaF_4.py
-  Adapted from Zilvinas': http://www.codeskulptor.org/#user41_HMRrujMMRe_13.py
+  Zilvinas' version: http://l.facebook.com/l.php?u=http%3A%2F%2Fwww.codeskulptor.org%2F%23user41_HMRrujMMRe_16.py&h=CAQHCWgte
+  Maximilian's adapted of Zilvinas': http://www.codeskulptor.org/#user41_HMRrujMMRe_13.py
 Rock.py: http://www.codeskulptor.org/#user41_5tNh6UZWXL_123.py
 Asteroid.py: http://www.codeskulptor.org/#user41_xNnlMm9obu_48.py
 
